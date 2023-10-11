@@ -1,0 +1,156 @@
+{% extends 'base_w.html' %} {% load static %} {% block content %}
+<head>
+  <link rel="stylesheet" href="{% static 'css/write.css' %}?{% now "U" %}">
+  <script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/classic/ckeditor.js"></script>
+
+
+    <script>
+      // Handle image upload and insert into CKEditor
+      document.addEventListener('DOMContentLoaded', (event) => {
+        document.getElementById('imageUpload').addEventListener('change', function () {
+            let formData = new FormData();
+            formData.append('file', this.files[0]);
+
+            fetch('{% url "image_upload" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const editor = CKEDITOR.instances.content;
+                    editor.insertHtml(`<img src="${data.location}" />`);
+                })
+                .catch(error => console.error('Error:', error));
+        });
+        
+
+        
+
+        // Handle AI Autocomplete
+        document.getElementById('aiAutocompleteButton').addEventListener('click', function () {
+            // Loading animation
+            document.getElementById('loading-animation').style.display = 'block';
+            document.getElementById('ai-img').style.display = 'none';
+
+            // Get the title from the input field
+            const title = document.getElementsByName('title')[0].value;
+
+            // Get the current content from CKEditor
+            const editor = CKEDITOR.instances.content;
+            const currentContent = editor.getData();
+
+            // Make a request to ChatGPT API with the title
+            fetch('/autocomplete/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}', // Replace with your CSRF token
+                },
+                body: new URLSearchParams({
+                    'title': title
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('loading-animation').style.display = 'none';
+                    document.getElementById('ai-img').style.display = 'block';
+
+                    // Append the AI Autocomplete data to the current content
+                    data.message = data.message.replace(/\n/g, '<br>');
+                    editor.setData(currentContent + data.message);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('loading-animation').style.display = 'none';
+                });
+        });
+      });
+  </script>
+  {% if temp_load %}
+  <script>
+    alert('임시저장된 글을 불러옵니다');
+  </script>
+</head>
+{% endif %}
+<!-- 메인-->
+<div class="container_write">
+  <div class="big-box">
+    <form class="write-big-box" method="POST"  action="{% if edit_mode %}{% url 'create_or_update_post' post.id %}{% else %}{% url 'create_or_update_post' %}{% endif %}" enctype="multipart/form-data">
+          <div class="write-box">
+          {% csrf_token %} 
+          {{form.media}} {{form.title}} {{form.content}}
+          </div>
+        
+      
+
+      <div class="post-info-box">
+        <button type="button" id="aiAutocompleteButton" class="ai-button">
+          <img id="ai-img" src="{% static 'img/ai_2.svg' %}" alt="AI 아이콘" />
+          <div id="loading-animation" style="display: none;">
+            <img src="{% static 'img/loading.gif' %}" alt="로딩 중" />
+          </div>
+          AI 글 자동완성
+        </button>
+        <div class="box">
+          <h2>TOPIC</h2>
+          <div>
+            <input type="radio" id="all" name="topic" value="전체" {% if topic == '전체' %}checked{% endif %} />
+            <label for="all">전체</label>
+          </div>
+          <div>
+              <input type="radio" id="daily" name="topic" value="일상" {% if topic == '일상' %}checked{% endif %}/>
+              <label for="daily">일상</label>
+          </div>
+          <div>
+            <input type="radio" id="cooking" name="topic" value="요리" {% if topic == '요리' %}checked{% endif %}//>
+            <label for="cooking">요리</label>
+          </div>
+          <div>
+            <input type="radio" id="travel" name="topic" value="여행" {% if topic == '여행' %}checked{% endif %}//>
+            <label for="travel">여행</label>
+          </div>
+          <div>
+            <input type="radio" id="movie" name="topic" value="영화" {% if topic == '영화' %}checked{% endif %}//>
+            <label for="movie">영화</label>
+          </div>
+          <div>
+            <input type="radio" id="it" name="topic" value="IT" {% if topic == 'IT' %}checked{% endif %}//>
+            <label for="it">IT / 전자기기</label>
+          </div>
+        </div>
+        <div class="box">
+          <div class="info">
+            <h2>UPLOAD INFO</h2>
+            <p>공개여부: {% if edit_mode %}전체공개{% else %}미공개{% endif %}</p>
+            <input type="file" name="file" id="imageUpload" style="display:none;">
+            <button type="button" class="button-line" onclick="document.getElementById('imageUpload').click();">이미지 업로드</button>
+          </div>
+          <div class="save-box">
+              {% if edit_mode %}
+                  <input
+                    type="submit"
+                    name="delete-button" 
+                    class="delete-button"
+                    value="삭제"
+                  />
+                  <input
+                    type="submit"
+                    class="save-button"
+                    value="수정"
+                  />
+                  
+              {% else %}
+                <input type="submit" name="temp-save-button" class="temp-save-button" value="임시저장" />
+                <input type="submit" name="save-button" class="save-button" value="글 작성" />
+              {% endif %}
+          </div>
+        </div>
+        
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

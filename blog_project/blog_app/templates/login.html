@@ -1,0 +1,56 @@
+{% load socialaccount %}
+{% load static %}
+{% load static %}
+{% providers_media_js %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}?{% now "U" %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}?{% now "U" %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon_2.ico' %}?{% now "U" %}">
+    <title>사이비 인증</title>
+</head>
+<body>
+    {% if user.is_authenticated %}
+    <p>{{ user.username }}</p>
+    <a href="javascript:{document.getElementById('logout').submit()}">로그아웃</a>
+    <form id="logout" method="POST" action="{% url 'logout' %}">
+        {% csrf_token %} <input type="hidden" />
+    </form>
+    {% else %}
+    <div class="flex-apply">
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <img style="width:200px;height:200px;align-self: center;" src="{% static '/img/42b_black.svg'%}">
+            <div class="box">
+                <h3 style="white-space: nowrap;">Prove your faith</h3><br>
+                <input type="text" name="username" placeholder="user name">
+                <input type="password" name="password" placeholder="password">
+                <input type="submit" value="Login" class="login">
+                <div class="social">
+                    <a href="{% provider_login_url 'google' %}" style="background-color:#4285F4">
+                        <div class="social_flex"><div class="social_img google"><img src="{% static 'img/google.svg' %}"></div><div class="social-text">Login with Google</div></div>
+                    </a>
+                    <a href="{% provider_login_url 'naver' %}" style="background-color:#03c75a">
+                        <div class="social_flex"><div class="social_img"><img src="{% static 'img/naver.svg' %}"></div><div class="social-text">Login with Naver</div></div>
+                    </a>
+                    <a href="{% provider_login_url 'kakao' %}" style="background-color:#f9e000">
+                        <div class="social_flex"><div class="social_img"><img src="{% static 'img/kakao.svg' %}"></div><div class="social-text">Login with Kakao</div></div>
+                    </a>
+                </div>
+                <a href="{% url 'signup' %}" style="color:#1e1e1e;">Signup /</a>
+                <a href="{% url 'board' %}" style="color:#1e1e1e;"> Home</a>
+            </div>
+        </form>   
+    </div>
+    {% endif %}
+{% comment %} 로그아웃 부분 다른 html에 추가하면될듯 {% endcomment %}
+    
+    
+    
+
+
+</body>
+</html> 

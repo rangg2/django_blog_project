@@ -1,0 +1,14 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href={% static 'css/login.css' %}>
+    <title>Document</title>
+</head>
+<body class="failed">
+    <h1>비밀번호를 동일하게 입력 해주세요.</h1>
+    <button><a href="{% url "signup" %}">돌아가기</a></button>
+</body>
+</html>

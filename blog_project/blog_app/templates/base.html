@@ -1,0 +1,112 @@
+{% load static %}
+{% load socialaccount %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}?{% now "U" %}">
+    <link rel="stylesheet" href="{% static 'css/navi_base.css' %}?{% now "U" %}">
+    <link rel="stylesheet" href="{% static 'css/navi_black.css' %}?{% now "U" %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}?{% now "U" %}">
+    <link rel="icon" href="{%static 'img/42b_favicon.svg'%}">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class = "desktop">
+        <div class="nav-bar">
+            <div class="nav-container">
+                <a href="{% url 'board' %}" class="logo-link">
+                <img src="{%static 'img/42b_white.svg'%}" alt="헤더 로고" class="logo"
+            /></a>
+                <div class="nav-buttons">
+                    <div class="nav-topics">
+                        <a href="{% url 'post_list_by_topic' topic='일상' %}"
+                        ><button>일상</button></a
+                        >
+                        <a href="{% url 'post_list_by_topic' topic='요리' %}"
+                        ><button>요리</button></a
+                        >
+                        <a href="{% url 'post_list_by_topic' topic='여행' %}"
+                        ><button>여행</button></a
+                        >
+                        <a href="{% url 'post_list_by_topic' topic='영화' %}"
+                        ><button>영화</button></a
+                        >
+                        <a href="{% url 'post_list_by_topic' topic='IT' %}"
+                        ><button>IT</button></a
+                        >
+                    </div>
+                    <div class="row-box">
+                        {% if user.is_authenticated %}
+                        <button onclick=""><a href="javascript:{document.getElementById('logout').submit()}" class="logout-button">Logout</a></button>
+                        <form id="logout" method="POST" action="{% url 'logout' %}">
+                            {% csrf_token %} <input type="hidden" />
+                        </form>
+                        <button class="primary-button"><a href="{% url 'create_or_update_post' %}">Just Write!</a></button>
+                        {% else %}
+                        <button class="primary-button" onclick=""><a href="{% url 'login' %}" style="color:black">Login</a></button> 
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <header class = "mobile">
+        <div class="nav-bar">
+            <div class="nav-container">
+                <div class="mobile-header">
+                    <div class="logo-box">
+                        <button onclick="menuOpen()"><img class="hamberger" src="{%static 'img/hamburger_white.svg'%}" alt="" ></button>
+                        <a href="{% url 'board' %}" class="logo-link">
+                            <img src="{%static 'img/42b_white.svg'%}" alt="헤더 로고" class="logo"
+                        /></a>
+                    </div>
+                    <div class="nav-buttons">
+                        <div class="row-box">
+                            {% if user.is_authenticated %}
+                            <button onclick=""><a href="javascript:{document.getElementById('logout').submit()}" class="logout-button">Logout</a></button>
+                            <form id="logout" method="POST" action="{% url 'logout' %}">
+                                {% csrf_token %} <input type="hidden" />
+                            </form>
+                            <button class="primary-button"><a href="{% url 'create_or_update_post' %}">Just Write!</a></button>
+                            {% else %}
+                            <button class="primary-button" onclick=""><a href="{% url 'login' %}" style="color:black">Login</a></button> 
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="moblie-nav display_none" id="moblie-nav">
+            <div class="mobile-nav-menu" id="moblie-nav-menu">
+                <a href="{% url 'post_list_by_topic' topic='일상' %}"
+                >일상</a
+                >
+                <a href="{% url 'post_list_by_topic' topic='요리' %}"
+                >요리</a
+                >
+                <a href="{% url 'post_list_by_topic' topic='여행' %}"
+                >여행</a
+                >
+                <a href="{% url 'post_list_by_topic' topic='영화' %}"
+                >영화</a
+                >
+                <a href="{% url 'post_list_by_topic' topic='IT' %}"
+                >IT</a
+                >
+            </div>
+            <div class="close-nav" onclick="menuOpen()" id="close=nav"></div>
+        </div>
+    </header>
+    {% block content %}
+    {% endblock content %}
+    <!-- 하단 -->
+    <footer class="footer">
+        <div class="container">
+            <p>Made with <span>Django</span></p>
+        </div>
+    </footer>
+</body>
+<script src="{%static 'js/base.js'%}"></script>

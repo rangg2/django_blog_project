@@ -1,0 +1,124 @@
+{% extends 'base_w.html' %}
+{% load static %}
+{% block content %}
+<head>
+    <link rel="stylesheet" href="{% static 'css/post.css' %}?{% now "U" %}">
+</head>
+<div class = "apply-flex">
+    <section class = "container">
+        <!--메인-->
+        <article class = "box-divider">
+            <!-- 작성된 게시글 -->
+            <div class="big-box">
+                <div class="post-info">
+                    {% comment %} 게시 날짜 {% endcomment %}
+                    <h5>{{ post.created_at|date:'Y-m-d H:i' }} | {{post.views}} 조회</h5>
+                    {% comment %} 제목 {% endcomment %}
+                    <h1>{{post.title}}</h1>
+                    {% comment %} 작성자 {% endcomment %}
+                    <h5>{{post.user_id}}</h5>
+                    {% comment %} 주제 {% endcomment %}
+                    <div class="topic-box">{{post.topic}}</div>
+                    {% comment %} 내용  {% endcomment %}
+                    <div class="post-content">
+                        <p>
+                            {{post.content|safe}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- 오른쪽 사이드 : 추천게시글 리스트 = recommended_post-->
+            <aside class="small-box">
+                <div class="post-name">
+                    <p><h3>Other posts<br>
+                    you may like</h3></p>
+                </div>
+                {% for recommended_post in recommended_posts %}
+                <div class="recommend-box">
+                    <a href="{% url 'post_detail' recommended_post.id %}">
+                    {{ recommended_post.image_tag|safe }}
+                    {{ recommended_post.title }}</a>
+                </div>
+                {% endfor %}
+            </aside>
+        </article>
+        <footer>
+            <div class="button-box">
+                {% comment %} {% if user.is_authenticated %}
+                <a href="{% url "edit" %}">수정하기</a>
+                <a href="{% url "delete" %}">삭제하기</a>
+                {% endif %} {% endcomment %}
+                {% if user.is_authenticated %}
+                <div class="box-divider" style="gap:10px">
+                    {% comment %} 수정버튼 {% endcomment %}
+                    <a href="{% url 'create_or_update_post' post.id %}">
+                    <button class="edit-button">수정하기</button>
+                    </a>
+                    {% comment %} 삭제버튼 {% endcomment %}
+                    <form method="POST" action="{% url 'post_detail' post.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="delete-button" value="true">
+                    <button type="submit" class="delete-button">삭제하기</button>
+                    </form>
+                </div>
+                {% endif %}
+                <button onclick="" class="share-button">공유하기</button>
+            </div>
+            
+            <div class="another-big-box">
+                {% if next_post %}
+                    <div class="another-post-box">
+                        <a href="{% url 'post_detail' next_post.id %}">                 
+                            <div class="post-box">
+                                <p>다음글</p>
+                                <p class="post-name">{{ next_post.title }}</p>
+                            </div>
+                            <p>
+                                {{ next_post.created_at|date:'Y-m-d H:i' }}
+                            </p>
+                        </a>
+                    </div>
+                {% else %}
+                        <div class="another-post-box"></div>
+                        {% endif %}
+                {% if previous_post %}
+                <div class="another-post-box">
+                    <a href="{% url 'post_detail' previous_post.id %}">                   
+                        <div class="post-box">
+                            <p>이전글</p>
+                            {% comment %} <a href="{% url "post" owner_id=prev_post.writer post_id=prev_post.id%}"> {% endcomment %}
+                            <p class="post-name">{{previous_post.title}}</p>
+                        </div>
+                        <p>
+                            
+                            {{ previous_post.created_at|date:'Y-m-d H:i' }}
+                        </p>
+                    </a>
+                </div>
+                        {% else %}
+                        <div class="another-post-box"></div>
+                        {% endif %}
+                
+            </div>
+        </footer>
+    
+    </section>
+</div>
+<script>
+    // 공유하기 버튼 클릭 시
+    document.querySelector('.share-button').addEventListener('click', function() {
+        let postUrl = window.location.href;
+        
+        // 클립보드에 복사
+        let tempInput = document.createElement("input");
+        document.body.appendChild(tempInput);
+        tempInput.value = postUrl;
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+        
+        // 알림 표시
+        alert('포스트 링크가 클립보드에 복사되었습니다');
+        });
+</script>
+{% endblock %}

@@ -1,0 +1,129 @@
+.nav-bar_w {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 104px;
+    position: fixed;
+    top: 0;
+    background-color: #f9f8f4;
+    width: 100%;
+    z-index: 999;
+    color: #1e1e1e;
+    text-decoration: none;
+    font-family: 'Pretendard', sans-serif;
+}
+
+.mobile-nav-menu_w {
+    flex-basis: 320px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f8f4;
+    z-index: 1000;
+    padding: 10px;
+    animation-duration: 0.5s;
+    animation-name: slide_open;
+}
+
+.mobile-nav-menu_w a {
+    margin: 10px;
+    padding: 20px;
+    border-radius: 5px;
+    color: #1e1e1e;
+}
+
+.mobile-nav-menu_w a:hover {
+    background-color: #e7e3da;
+    transition: transform 0.8s, background-color 0.3s;
+}
+
+.nav-container_w {
+    flex-basis: 1024px;
+    flex-shrink: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: auto;
+    padding: 0px 10px;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.nav-buttons_w {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.nav-topics_w {
+    display: flex;
+    gap: 10px;
+}
+
+.nav-topics_w a {
+    width: 30px;
+    padding: 10px 15px;
+    text-align: center;
+    border-radius: 2px;
+    color: #1e1e1e;
+    white-space: nowrap;
+}
+
+.nav-topics_w a:hover {
+    background-color: #e7e3da;
+    transition: transform 0.8s, background-color 0.3s;
+}
+
+button {
+    cursor: pointer;
+    all: unset;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.primary-button_w {
+    display: inline-block;
+    background-color: #1e1e1e;
+    flex-shrink: 0;
+    border-radius: 2px;
+    /* 너비와 높이가 같으므로 50%로 설정하면 동그라미 모양이 됩니다 */
+    text-decoration: none;
+    text-align: center;
+    font-weight: bold;
+    color: #F9F8F4;
+    padding: 10px 25px;
+}
+
+.primary-button_w:hover {
+    background-color: #e7e3da;
+    color: #1e1e1e;
+    transition: transform 0.8s, background-color 0.3s;
+}
+
+.logout-button_w {
+    display: inline-block;
+    border-radius: 2px;
+    /* 너비와 높이가 같으므로 50%로 설정하면 동그라미 모양이 됩니다 */
+    text-decoration: none;
+    text-align: center;
+    font-weight: bold;
+    padding: 10px 25px;
+}
+
+.logout-button_w:hover {
+    color: rgb(255, 162, 162);
+    transition: transform 0.8s, color 0.3s;
+}
+
+
+.row-box_w {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}

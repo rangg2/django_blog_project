@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% load custom_filter%}
+<head>
+    <link rel="stylesheet" href="{% static 'css/postlist.css' %}?{% now "U" %}">
+</head>
+<section class ="post-list">
+    <!-- 최고 조회수 게시글 = best_article -->
+    {% for post in posts %} {% if forloop.first %}
+    <div class = "first-post-box">
+        <div class="container desktop">
+            <a href="{% url 'post_detail' post.id %}">
+                <div class="post-info-box">
+                    <h3>{{post.title}}</h3>
+                    <p>{{ post.content|text_only }}</p>
+                    <button>READ MORE</button>
+                </div>
+            </a>
+            {% if  post.content|get_img_src %}
+            <div class="thumbnail-img"><img src = {{ post.content|get_img_src }}></div>
+            {% endif %}
+        </div>
+        <div class="container mobile" style="background-image:url('{{ post.content|get_img_src }}');background-repeat : no-repeat;background-size : cover ">
+            <a href="{% url 'post_detail' post.id %}" >
+                <div class="post-info-box">
+                    <h3>{{post.title}}</h3>
+                    <p>{{ post.content|text_only }}</p>
+                    <button>READ MORE</button>
+                </div>
+            </a>
+        </div>
+    </div>
+    {% endif %} {% endfor %}
+    <!-- 전체 게시글들 -->
+    <article class = "post-box">
+        <div class="container">
+            {% for post in posts %} {% if not forloop.first %}
+                {% comment %} <a class="card-link" href="{% url 'post_detail' post.id %}"> {% endcomment %}
+                    <div class="card">
+                        <div class="card-thumbnail-img">
+                            {% if  post.content|get_img_src %}
+                                <img src="{{post.content|get_img_src}}" onerror="{% static "img/no_photos.svg" %}"alt="Thumbnail image" />
+                            {% else %}
+                                <img src="{% static "img/no_photos.svg" %}" alt="Thumbnail image" style="width: auto; height: 100%; background-color: transparent" />
+                            {% endif %}
+                        </div>
+                        <a 
+                        href="{% url 'post_detail' post.id %}"
+                        >
+                        <div class="card-info-box">
+                                <p>{{ post.created_at|date:'Y-m-d H:i' }} | {{post.user_id}}</p>
+                                <h3>{{ post.title }}</h3>
+                                <div class="sub-info">{{ post.content|text_only }} </div>
+                        </div>
+                        </a>
+                    </div>
+            {% endif %} {% endfor %} 
+        </div>
+    
+    </article>
+</section>
+{% endblock %}

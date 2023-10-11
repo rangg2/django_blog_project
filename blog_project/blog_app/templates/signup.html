@@ -1,0 +1,34 @@
+{% load static %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href={% static 'css/login.css' %}>
+    <link rel="stylesheet" href={% static 'css/login.css' %}>
+    <title>Document</title>
+</head>
+<body style="background:white;">
+    
+    <form method="POST" action="{% url 'signup' %}">
+        {% csrf_token %}
+
+        <img src="{% static '/img/42b_b.svg'%}">
+        <div style="background:#808080;padding:30px;">
+            <h3>Welcome to 42BLOG</h3>
+            <input type="text" name="username" placeholder="username">
+            <br>
+            <input type="password" name="password" placeholder="password">
+            <br>
+            <input type="password" name="confirm" placeholder="confirm">
+            <br>
+        </div>
+        <input type="submit" value="Signup" class="login" style="cursor:pointer;background:#808080;margin-top:10px;">
+        <div class="home">
+            <button class="home_btn"><a href="{% url 'board' %}">home</a></button>
+            <button class="home_btn"><a href="{% url 'login' %}">back</a></button>
+        </div>
+    </form>
+</body>
+</html>
